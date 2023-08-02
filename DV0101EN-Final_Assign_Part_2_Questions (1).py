@@ -24,8 +24,8 @@ app = dash.Dash(__name__)
 #---------------------------------------------------------------------------------
 # Create the dropdown menu options
 dropdown_options = [
-    {'label': '...........', 'value': 'Yearly Statistics'},
-    {'label': 'Recession Period Statistics', 'value': '.........'}
+    {'label': 'yearly statistics', 'value': 'Yearly Statistics'},
+    {'label': 'Recession Period Statistics', 'value': 'Recession Period Statistics'}
 ]
 # List of years 
 year_list = [i for i in range(1980, 2024, 1)]
@@ -33,7 +33,7 @@ year_list = [i for i in range(1980, 2024, 1)]
 # Create the layout of the app
 app.layout = html.Div([
     #TASK 2.1 Add title to the dashboard
-    html.H1("Automobile Sales Statistics Dashboard"),#May include style for title
+    html.H1("Automobile Sales Statistics Dashboard",#May include style for title
                                 style={'textAlign':'left', 
                                         'color':'#503D36', 
                                         'font-size':24}),
@@ -43,10 +43,10 @@ app.layout = html.Div([
         dcc.Dropdown(
             id='dropdown-statistics',
             options=dropdown_options,
-            valu='Select Statistics',
+            value='Select Statistics',
             placeholder='Select a report type'
         )
-    ])
+    ]),
     html.Div(dcc.Dropdown(
             id='select-year',
             options=[{'label': i, 'value': i} for i in year_list],
@@ -71,7 +71,7 @@ def update_input_container(selected_statistics):
 # Define the callback function to update the input container based on the selected statistics
 @app.callback(
     Output(component_id='output-container', component_property='children'),
-    [Input(component_id='select-year', component_property='value'), Input(component_id='dropdown-statistics', component_property='value')])
+    [Input(component_id='dropdowm-statistics', component_property='value'), Input(component_id='select-year', component_property='value')])
 
 
 def update_output_container(selected_statistics, input_year):
@@ -92,7 +92,7 @@ def update_output_container(selected_statistics, input_year):
 
 #Plot 2 Calculate the average number of vehicles sold by vehicle type       
         # use groupby to create relevant data for plotting
-        average_sales = recession_data.groupby('Vehicle_type')['Automobile_Sales']mean().reset_index()                           
+        average_sales = recession_data.groupby('Vehicle_type')['Automobile_Sales'].mean().reset_index()                           
         R_chart2  = dcc.Graph(figure=px.bar(x= 'Vehicle_type', y= ['Automobile_Sales'].mean,
                 title='Average Number of Vehicles Sold by Type'))
         
@@ -104,7 +104,7 @@ def update_output_container(selected_statistics, input_year):
                     values='Advertising_Expenditure',
                  names='Vehicle_Type',
                  title="Total Expenditure by Vehicle Type"
-                )
+                ))
 
 
 # Plot 4 bar chart for the effect of unemployment rate on vehicle type and sales
@@ -118,8 +118,8 @@ def update_output_container(selected_statistics, input_year):
 
 #TASK 2.6: Returning the graphs for displaying Recession data
         return [
-            html.Div(className='chart-item', children=[html.Div(children=R_chart1),html.Div(children=children=R_chart2)],style={display':'flex}),
-            html.Div(className='chart-item', children=[html.Div(children=children=R_chart3),html.Div(children=R_chart4)],style={display':'flex})
+            html.Div(className='chart-item', children=[html.Div(children=R_chart1),html.Div(children=R_chart2)],style={'display':'flex'}),
+            html.Div(className='chart-item', children=[html.Div(children=R_chart3),html.Div(children=R_chart4)],style={'display':'flex'})
             ]
  # Yearly Statistic Report Plots                             
     elif (input_year and selected_statistics=='selected_statistic') :
